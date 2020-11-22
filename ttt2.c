@@ -85,7 +85,13 @@ char turn( Board board ) {
 }
 
 void init_board( Board board ) {
-
+  int bh = board_hash(board);
+  struct BoardNode node = htable[bh];
+  node->init = 1;
+  node->depth = depth(board);
+  node->turn = turn(board);
+  node->winner = winner(board);
+  strcpy(node->board, board);
 }
 
 void join_graph( Board board ) {
