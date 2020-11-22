@@ -11,8 +11,52 @@ void init_boards() {
 }
 
 char winner( Board board ) {
-  if (depth(board) == 9) { // if all spaces are filled
-
+  int i = 0;
+  int j = 0;
+  int k = 0;
+  int x_spots[5]; // x always starts, therefore, 'X' gets one more turn
+  int o_spots[4];
+  for (i = 0; i < 9; i++) {
+    if (board[pos2idx[i]] == 'X') {
+      x_spots[j] = i;
+      j++;
+    } else if (board[pos2idx[i]] == 'O') {
+      o_spots[k] = i;
+      k++;
+    }
+  }
+  int wscore;
+  for (i = 0; i < 8; i++) {
+    wscore = 0;
+    for (j = 0; j < 3; j++) { // go through each number in the wins array and compare against x_spots
+      for (k = 0; k < 5; k++) { // if, in this specific wins case, a value of x_spots matches...
+        if (x_spots[k] == WINS[i][j]) {
+          wscore++; // add one to this total, which, after going through all 3 numbers, is 3 (ie 3 matches with WINS),
+        }
+      }
+    }
+    if (wscore >= 3) {
+      return 'X'; // return X
+    }
+  }
+  for (i = 0; i < 8; i++) {
+    wscore = 0;
+    for (j = 0; j < 3; j++) {
+      for (k = 0; k < 4; k++) { // only 4 for 'O'
+        if (o_spots[k] == WINS[i][j]) {
+          wscore++;
+        }
+      }
+    }
+    if (wscore == 3) {
+      return 'O';
+    }
+  }
+  // if no player has won outright
+  if (depth(board) == 9) {
+    return '-'; // returns the tie character
+  } else {
+    return '?'; // return the in-progress character
   }
 }
 
@@ -32,7 +76,12 @@ int depth( Board board ) {
 }
 
 char turn( Board board ) {
-
+  int d = depth(board);
+  if (d % 2 == 0) { // x plays on even turns: (0, 2, 4, 6, 8)
+    return 'X';
+  } else { // o plays on odd turns (1, 3, 5, 7)
+    return 'O';
+  }
 }
 
 void init_board( Board board ) {
