@@ -85,6 +85,10 @@ char turn( Board board ) {
 }
 
 void init_board( Board board ) {
+  if (board == NULL) {
+    fprintf(stderr, "%s\n", "Null board error in init_board");
+    exit(-1);
+  }
   int bh = board_hash(board);
   struct BoardNode node = htable[bh];
   node->init = 1;
@@ -95,6 +99,10 @@ void init_board( Board board ) {
 }
 
 void join_graph( Board board ) {
+  if (board == NULL) {
+    fprintf(stderr, "%s\n", "Null board error in join_graph");
+    exit(-1);
+  }
   int i = 0;
   int bh = 0;
   int new_bh = 0;
