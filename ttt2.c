@@ -95,5 +95,24 @@ void init_board( Board board ) {
 }
 
 void join_graph( Board board ) {
-
+  int i = 0;
+  int bh = 0;
+  int new_bh = 0;
+  for (i = 0; i < 8; i++) {
+    bh = board_hash(board);
+    if (board[pos2idx[i]] == 'X' || board[pos2idx[i]] == 'O') {
+      (htable[bh]->move)[i] = -1; // This is the recursive base case, stop when board is full for all 8
+    } else {
+      Board new_board;
+      strcpy(new_board, board);
+      new_board[pos2idx[i]] = turn(board);
+      new_bh = board_hash(new_board);
+      // set the move (the edge to the next state) to be the hash of the new board
+      (htable[bh]->move)[i] = new_bh;
+      if (htable[new_bh]->init != 1) {
+        init_board(new_board);
+        join_graph(new_board);
+      }
+    }
+  }
 }
