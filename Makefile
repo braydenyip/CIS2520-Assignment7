@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -std=c99 -Wall -pedantic -g
 
-all: alphatoe
+all: alphatoe count_nodes show_node
 
 
 alphatoe: alphatoe.o ttt2.o ttt1.o

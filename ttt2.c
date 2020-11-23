@@ -6,7 +6,7 @@
 void init_boards() {
   int i = 0;
   for (i = 0; i < HSIZE; i++) {
-    htable[i]->init = 0;
+    htable[i].init = 0;
   }
 }
 
@@ -90,12 +90,11 @@ void init_board( Board board ) {
     exit(-1);
   }
   int bh = board_hash(board);
-  struct BoardNode node = htable[bh];
-  node->init = 1;
-  node->depth = depth(board);
-  node->turn = turn(board);
-  node->winner = winner(board);
-  strcpy(node->board, board);
+  htable[bh].init = 1;
+  htable[bh].depth = depth(board);
+  htable[bh].turn = turn(board);
+  htable[bh].winner = winner(board);
+  strcpy(htable[bh].board, board);
 }
 
 void join_graph( Board board ) {
@@ -106,21 +105,28 @@ void join_graph( Board board ) {
   int i = 0;
   int bh = 0;
   int new_bh = 0;
-  for (i = 0; i < 8; i++) {
+  for (i = 0; i < 9; i++) {
     bh = board_hash(board);
     if (board[pos2idx[i]] == 'X' || board[pos2idx[i]] == 'O') {
-      (htable[bh]->move)[i] = -1; // This is the recursive base case, stop when board is full for all 8
+      (htable[bh].move)[i] = -1; // This is the recursive base case, stop when board is full for all 8
     } else {
       Board new_board;
       strcpy(new_board, board);
       new_board[pos2idx[i]] = turn(board);
       new_bh = board_hash(new_board);
       // set the move (the edge to the next state) to be the hash of the new board
-      (htable[bh]->move)[i] = new_bh;
-      if (htable[new_bh]->init != 1) {
+      (htable[bh].move)[i] = new_bh;
+      if (htable[new_bh].init != 1) {
         init_board(new_board);
         join_graph(new_board);
       }
     }
   }
+}
+
+void compute_score() {
+  printf("Score computed\n");
+}
+int best_move( int board ) {
+  return 1;
 }
