@@ -138,9 +138,9 @@ void compute_score() {
         htable[i].score = 0;
       } else {
         t = turn(htable[i].board);
-        if (t == 'X') {
+        if (t == 'X') { // If x find the maximum
           htable[i].score = -2;
-        } else {
+        } else if (t == 'O') {
           htable[i].score = 2;
         }
       }
@@ -149,9 +149,11 @@ void compute_score() {
   printf("Score computed\n");
 }
 
+// why int here?
 int best_move( int board ) {
   //int i;
   //int max_score = 0;
   //int min_score = 1000000;
+
   return 1;
 }
