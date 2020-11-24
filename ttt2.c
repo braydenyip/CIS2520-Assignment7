@@ -126,7 +126,7 @@ void join_graph( Board board ) {
 
 void compute_score() {
   int i = 0;
-  char win, turn;
+  char win, t;
   for (i = 0; i < HSIZE; i++) {
     if (htable[i].init == 1) {
       win = winner(htable[i].board);
@@ -137,11 +137,11 @@ void compute_score() {
       } else if (win == '-') {
         htable[i].score = 0;
       } else {
-        turn = turn(htable[i].board);
-        if (turn == 'X') {
-          return 0;
+        t = turn(htable[i].board);
+        if (t == 'X') {
+          htable[i].score = -2;
         } else {
-          return 1;
+          htable[i].score = 2;
         }
       }
     }
@@ -153,4 +153,5 @@ int best_move( int board ) {
   //int i;
   //int max_score = 0;
   //int min_score = 1000000;
+  return 1;
 }
