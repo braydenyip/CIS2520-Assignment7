@@ -125,8 +125,48 @@ void join_graph( Board board ) {
 }
 
 void compute_score() {
+  int i = 0;
+  char win, turn;
+  for (i = 0; i < HSIZE; i++) {
+    if (htable[i].init == 1) {
+      win = winner(htable[i].board);
+      if (win == 'X') {
+        htable[i].score = 1;
+      } else if (win == 'O') {
+        htable[i].score = -1;
+      } else if (win == '-') {
+        htable[i].score = 0;
+      } else {
+        turn = turn(htable[i].board);
+        if (turn == 'X') {
+          return 0;
+        } else {
+          return 1;
+        }
+      }
+    }
+  }
   printf("Score computed\n");
 }
+
 int best_move( int board ) {
-  return 1;
+  char turn = turn(board);
+  int i;
+  int max_score = 0;
+  int min_score = 1000000;
+  if (turn == 'X') {
+    for (i = 0; i < 9; i++) {
+      if (htable[move[i]].score > max_score) {
+        max_score = htable[move[i]].score;
+      }
+    }
+    return max_score;
+  } else {
+    for (i = 0; i < 9; i++) {
+      if (htable[move[i]].score < min_score) {
+        min_score = htable[move[i]].score;
+      }
+    }
+    return min_score;
+  }
 }
