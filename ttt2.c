@@ -3,6 +3,9 @@
 #include <string.h>
 #include "ttt.h"
 
+int getMax(int move[9]);
+int getMin(int move[9]);
+
 void init_boards() {
   int i = 0;
   for (i = 0; i < HSIZE; i++) {
@@ -14,8 +17,8 @@ char winner( Board board ) {
   int i = 0;
   int j = 0;
   int k = 0;
-  int x_spots[5]; // x always starts, therefore, 'X' gets one more turn
-  int o_spots[4];
+  int x_spots[5] = {-1, -1, -1, -1, -1}; // x always starts, therefore, 'X' gets one more turn
+  int o_spots[4] = {-1, -1, -1, -1};
   for (i = 0; i < 9; i++) {
     if (board[pos2idx[i]] == 'X') {
       x_spots[j] = i;
@@ -126,34 +129,81 @@ void join_graph( Board board ) {
 
 void compute_score() {
   int i = 0;
-  char win, t;
+  int d = 0;
+  char win;
   for (i = 0; i < HSIZE; i++) {
-    if (htable[i].init == 1) {
-      win = winner(htable[i].board);
-      if (win == 'X') {
-        htable[i].score = 1;
-      } else if (win == 'O') {
-        htable[i].score = -1;
-      } else if (win == '-') {
-        htable[i].score = 0;
-      } else {
-        t = turn(htable[i].board);
-        if (t == 'X') { // If x find the maximum
-          htable[i].score = -2;
-        } else if (t == 'O') {
-          htable[i].score = 2;
+    for (d = 9; d >= 0; d--) {
+      if (htable[i].depth == d && htable[i].init == 1) {
+        win = htable[i].winner;
+        if (win == 'X') {
+          htable[i].score = 1;
+        } else if (win == 'O') {
+          htable[i].score = -1;
+        } else if (win == '-') {
+          htable[i].score = 0;
+        } else {
+          if ((htable[i].turn) == 'X') {
+            htable[i].score = getMax(htable[i].move);
+          } else {
+            htable[i].score = getMin(htable[i].move);
+          }
         }
       }
     }
   }
-  printf("Score computed\n");
 }
 
-// why int here?
-int best_move( int board ) {
-  //int i;
-  //int max_score = 0;
-  //int min_score = 1000000;
+int getMax(int move[9]) {
+  int max = -999999;
+  int i = 0;
+  for (i = 0; i < 9; i++) {
+    if (move[i] > 0) {
+      if (htable[move[i]].score > max) {
+        max = htable[move[i]].score;
+      }
+    }
+  }
+  return max;
+}
 
-  return 1;
+int getMin(int move[9]) {
+  int min = 999999;
+  int i = 0;
+  for (i = 0; i < 9; i++) {
+    if (move[i] > 0) {
+      if (htable[move[i]].score < min) {
+        min = htable[move[i]].score;
+      }
+    }
+  }
+  return min;
+}
+// int is the index of the board
+int best_move( int board ) {
+  struct BoardNode node = htable[board];
+  int i = 0;
+  int best;
+  if (node.turn == 'X') {
+    best = -1;
+    for (i = 0; i < 9; i++) {
+      if ((node.move)[i] == 1) {
+        return 1; // can't be higher than 1
+      } else if ((node.move)[i] == 0) {
+        best = 0;
+      }
+    }
+    return best;
+  } else if (node.turn == 'O') {
+    best = 1;
+    for (i = 0; i < 9; i++) {
+      if ((node.move)[i] == -1) {
+        return -1;
+      } else if ((node.move[i]) == 0) {
+        best = 0;
+      }
+    }
+    return best;
+  } else {
+    return 0;
+  }
 }
