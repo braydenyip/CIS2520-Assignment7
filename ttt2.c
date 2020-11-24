@@ -150,23 +150,7 @@ void compute_score() {
 }
 
 int best_move( int board ) {
-  char turn = turn(board);
-  int i;
-  int max_score = 0;
-  int min_score = 1000000;
-  if (turn == 'X') {
-    for (i = 0; i < 9; i++) {
-      if (htable[move[i]].score > max_score) {
-        max_score = htable[move[i]].score;
-      }
-    }
-    return max_score;
-  } else {
-    for (i = 0; i < 9; i++) {
-      if (htable[move[i]].score < min_score) {
-        min_score = htable[move[i]].score;
-      }
-    }
-    return min_score;
-  }
+  //int i;
+  //int max_score = 0;
+  //int min_score = 1000000;
 }
