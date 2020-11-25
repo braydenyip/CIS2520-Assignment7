@@ -129,24 +129,27 @@ void join_graph( Board board ) {
 
 void compute_score() {
   int i = 0;
-  int d = 0;
+  int d = 9;
   char win;
   for (i = 0; i < HSIZE; i++) {
     for (d = 9; d >= 0; d--) {
-      if (htable[i].depth == d && htable[i].init == 1) {
-        win = htable[i].winner;
-        if (win == 'X') {
-          htable[i].score = 1;
-        } else if (win == 'O') {
-          htable[i].score = -1;
-        } else if (win == '-') {
-          htable[i].score = 0;
-        } else {
-          if ((htable[i].turn) == 'X') {
-            htable[i].score = getMax(htable[i].move);
+      if (htable[i].init == 1) {
+        if (htable[i].depth == d) {
+          win = htable[i].winner;
+          if (win == 'X') {
+            htable[i].score = 1;
+          } else if (win == 'O') {
+            htable[i].score = -1;
+          } else if (win == '-') {
+            htable[i].score = 0;
           } else {
-            htable[i].score = getMin(htable[i].move);
+            if ((htable[i].turn) == 'X') {
+              htable[i].score = getMax(htable[i].move);
+            } else {
+              htable[i].score = getMin(htable[i].move);
+            }
           }
+          break;
         }
       }
     }
@@ -154,56 +157,70 @@ void compute_score() {
 }
 
 int getMax(int move[9]) {
-  int max = -999999;
-  int i = 0;
-  for (i = 0; i < 9; i++) {
-    if (move[i] > 0) {
-      if (htable[move[i]].score > max) {
-        max = htable[move[i]].score;
+  int maximum = -1;
+  for (int i = 0; i < 9; i++) {
+    if (move[i] >= 0 && htable[move[i]].init == 1) {
+      if (htable[move[i]].score > maximum) {
+        maximum = htable[move[i]].score;
       }
     }
   }
-  return max;
+  return maximum;
 }
 
 int getMin(int move[9]) {
-  int min = 999999;
-  int i = 0;
-  for (i = 0; i < 9; i++) {
-    if (move[i] > 0) {
-      if (htable[move[i]].score < min) {
-        min = htable[move[i]].score;
+  int minimum = 1;
+  for (int i = 0; i < 9; i++) {
+    if (move[i] >= 0 && htable[move[i]].init == 1) {
+      if (htable[move[i]].score < minimum) {
+        minimum = htable[move[i]].score;
       }
     }
   }
-  return min;
+  return minimum;
 }
 // int is the index of the board
 int best_move( int board ) {
   struct BoardNode node = htable[board];
   int i = 0;
-  int best;
+  int sc = 0;
+  int valid_sc0 = -1;
+  int valid_badmove = 0;
   if (node.turn == 'X') {
-    best = -1;
     for (i = 0; i < 9; i++) {
-      if ((node.move)[i] == 1) {
-        return 1; // can't be higher than 1
-      } else if ((node.move)[i] == 0) {
-        best = 0;
+      if (node.move[i] > -1) {
+        sc = htable[node.move[i]].score;
+        if (sc == 1) {
+          return i;
+        } else if (sc == 0) {
+          valid_sc0 = i;
+        } else if (sc == -1) {
+          valid_badmove = i;
+        }
       }
     }
-    return best;
-  } else if (node.turn == 'O') {
-    best = 1;
-    for (i = 0; i < 9; i++) {
-      if ((node.move)[i] == -1) {
-        return -1;
-      } else if ((node.move[i]) == 0) {
-        best = 0;
-      }
+    if (valid_sc0 > -1) {
+      return valid_sc0;
+    } else {
+      return valid_badmove;
     }
-    return best;
   } else {
-    return 0;
+    for (i = 0; i < 9; i++) {
+      if (node.move[i] > -1) {
+        sc = htable[node.move[i]].score;
+        if (sc == -1) {
+          return i;
+        } else if (sc == 0) {
+          valid_sc0 = i;
+        } else if (sc == 1) {
+          valid_badmove = i;
+        }
+      }
+    }
+    if (valid_sc0 > -1) {
+      return valid_sc0;
+    } else {
+      return valid_badmove;
+    }
   }
 }
