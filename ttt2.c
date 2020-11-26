@@ -133,8 +133,8 @@ void compute_score() {
   int i = HSIZE;
   int d = 9;
   char win;
-  for (i = HSIZE; i > -1; i--) {
-    for (d = 9; d >= 0; d--) {
+  for (d = 9; d > -1; d--) {
+    for (i = HSIZE; i > -1; i--) {
       if (htable[i].init == 1) {
         if (htable[i].depth == d) {
           win = htable[i].winner;
@@ -151,7 +151,6 @@ void compute_score() {
               htable[i].score = getMin(htable[i].move);
             }
           }
-          break;
         }
       }
     }
