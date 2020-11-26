@@ -80,7 +80,9 @@ int depth( Board board ) {
 
 char turn( Board board ) {
   int d = depth(board);
-  if (d % 2 == 0) { // x plays on even turns: (0, 2, 4, 6, 8)
+  if (winner(board) != '?') {
+    return '-';
+  } else if (d % 2 == 0) { // x plays on even turns: (0, 2, 4, 6, 8)
     return 'X';
   } else { // o plays on odd turns (1, 3, 5, 7)
     return 'O';
