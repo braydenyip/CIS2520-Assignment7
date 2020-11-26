@@ -130,10 +130,10 @@ void join_graph( Board board ) {
 }
 
 void compute_score() {
-  int i = 0;
+  int i = HSIZE;
   int d = 9;
   char win;
-  for (i = 0; i < HSIZE; i++) {
+  for (i = HSIZE; i > -1; i--) {
     for (d = 9; d >= 0; d--) {
       if (htable[i].init == 1) {
         if (htable[i].depth == d) {
@@ -161,7 +161,7 @@ void compute_score() {
 int getMax(int move[9]) {
   int maximum = -1;
   for (int i = 0; i < 9; i++) {
-    if (move[i] >= 0 && htable[move[i]].init == 1) {
+    if (move[i] != -1 && htable[move[i]].init == 1) {
       if (htable[move[i]].score > maximum) {
         maximum = htable[move[i]].score;
       }
@@ -173,7 +173,7 @@ int getMax(int move[9]) {
 int getMin(int move[9]) {
   int minimum = 1;
   for (int i = 0; i < 9; i++) {
-    if (move[i] >= 0 && htable[move[i]].init == 1) {
+    if (move[i] != -1 && htable[move[i]].init == 1) {
       if (htable[move[i]].score < minimum) {
         minimum = htable[move[i]].score;
       }
